@@ -1,0 +1,8 @@
+_fortwrap.py
+fortwrap_old.py
+*.o
+*.mod
+main
+venv/
+.idea
+.DS_Store

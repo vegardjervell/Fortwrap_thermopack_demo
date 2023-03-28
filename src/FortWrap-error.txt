@@ -1,0 +1,15 @@
+FortWrap version 2.4.0
+Platform: darwin
+
+Traceback (most recent call last):
+  File "/Users/vegardjervell/Documents/sandkasse/fortran_c/src/../fortwrap.py", line 2270, in <module>
+    fcount += parse_file(f)
+  File "/Users/vegardjervell/Documents/sandkasse/fortran_c/src/../fortwrap.py", line 1110, in parse_file
+    parse_abstract_interface(f,line)
+  File "/Users/vegardjervell/Documents/sandkasse/fortran_c/src/../fortwrap.py", line 991, in parse_abstract_interface
+    parse_proc(file,line,abstract=True)
+  File "/Users/vegardjervell/Documents/sandkasse/fortran_c/src/../fortwrap.py", line 956, in parse_proc
+    proc = Procedure(proc_name,args,method,retval,proc_comments,nopass)
+  File "/Users/vegardjervell/Documents/sandkasse/fortran_c/src/../fortwrap.py", line 450, in __init__
+    for k, v in args.items:
+TypeError: 'builtin_function_or_method' object is not iterable
