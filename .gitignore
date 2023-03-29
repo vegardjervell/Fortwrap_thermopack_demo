@@ -1,7 +1,9 @@
 _fortwrap.py
 fortwrap_old.py
+wrappers/build
 *.o
 *.mod
+*.a
 main
 venv/
 .idea
