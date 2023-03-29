@@ -63,9 +63,9 @@ END MODULE base_eos_wrap_
 MODULE directeos_wrap_
 
   USE ISO_C_BINDING
+  USE directeos
   USE base_eos_wrap_
   USE base_eos
-  USE directeos
   IMPLICIT NONE
 
 CONTAINS
@@ -132,8 +132,8 @@ END MODULE directeos_wrap_
 MODULE variants_wrap_
 
   USE ISO_C_BINDING
-  USE base_eos_wrap_
   USE variants
+  USE base_eos_wrap_
   USE base_eos
   IMPLICIT NONE
 
