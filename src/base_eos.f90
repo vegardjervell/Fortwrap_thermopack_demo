@@ -62,11 +62,12 @@ END subroutine Fideal
     real, intent(in) :: T, V
     real, dimension(this%ncomps), intent(in) :: n
     real, intent(out) :: p
-    real :: F
+    real :: F, Ft
+    real, dimension(this%ncomps) :: Fn
     real :: Fv_res, Fv_id
 
-    call this%Fideal(T, V, n, F, Fv=Fv_id)
-    call this%Fres(T, V, n, F, Fv=Fv_res)
+    call this%Fideal(T, V, n, F, Ft, Fv_id, Fn)
+    call this%Fres(T, V, n, F, Ft, Fv_res, Fn)
 
     p = - (Fv_res + Fv_id)
 

@@ -14,6 +14,7 @@
 #ifndef SWIG // Protect declarations from SWIG
 #include <cstdlib>
 #include <vector>
+#include <memory>
 #include "InterfaceDefs.h"
 
 extern "C" {
