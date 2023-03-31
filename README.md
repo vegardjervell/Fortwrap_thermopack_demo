@@ -21,8 +21,35 @@ The dummy test-case is:
      * Implements `internal_comp`, but differently than `Variant1`
      * Implements `Fres`, which calls `internal_comp` and `variant_common_comp`
 
-Some changes have been made to FortWrap in order to make the wrapping work, as of now the fork found here can automatically wrap this test case without issues.
+Some changes have been made to FortWrap in order to make the wrapping work, and to automate generation of [PyBind11](https://pybind11.readthedocs.io/en/stable/) bindings.
 
 Moving forward: 
 * Implement internal computations that are not wrapped, to ensure that it is possible to make a minimal wrapper.
-* Use `pybind11` to expose the C++ interface and implement python wrapper.
+* Improve robustness of pybind-bindings generation.
+
+# Current workflow
+
+
+First: Navigate to the top-level directory of the `fortwrap` project (where `setup.py` is found) and `pip install -e .`
+
+Then: Navigate to the `fortwrap_thermopack_demo` directory (this directory, from now referred to as `demo`). 
+
+Run the script `build.sh`, which does the following:
+
+ * Compile the Fortran source
+ * Build the archive `libdemo_fortran.a`
+ * Move the archive and `.mod` files to the `demo/wrappers` directory
+ * Run `python -m fortwrap -g -i ../FortWrapOptions.txt` from the `demo/src` directory
+ * Compile the resulting `FortranISOWrappers.f90` and add it to the `libdemo_fortran.a` archive
+ * Compile the `.cpp` files in the `demo/wrappers` directory
+ * Compile `demo/main.cpp`
+
+To build the python wrappings, you must additionally run `cmake .. && make` from the `demo/wrappers/build` directory.
+
+The `demo/wrappers/CMakeLists.txt` does the following:
+
+ * Define the `pybind_module` target
+ * Add the `demo/wrappers/.cpp` files to the target
+    * It is the binding module `pybind11_bindings.cpp` that is used, not `bindings.cpp`
+ * Link to the archive `libdemo_fortran.a`
+ * Link to `libgfortran.dylib`
