@@ -1,64 +1,42 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/numpy.h>
-#include <iostream>
-#include "Variant2.h"
+// #include "Variant2.h"
 #include "NotIdGas.h"
-#include "Variant1.h"
-
-template <class T> class dumb_ptr{
-    private:
-        T* ptr;
-    public:
-        dumb_ptr() : ptr(nullptr) {}
-        dumb_ptr(T* ptr) : ptr(ptr) {}
-        dumb_ptr(const dumb_ptr& other) : ptr(other.ptr) {}
-        T& operator* () const { return *ptr; }
-        T* operator->() const { return ptr; }
-        operator T() const { return *ptr; }
-        T* get() const { return ptr; }
-        void destroy() { delete ptr; }
-        T& operator[](std::size_t idx) const { return ptr[idx]; }
-};
-
-PYBIND11_DECLARE_HOLDER_TYPE(T, dumb_ptr<T>)
-
-#define BaseEos_bindings(Model) \
-    .def("Fideal", &Model::Fideal) \
-    .def("pressure", [](Model& m, float T, float V, const std::vector<float>* n, py::array_t<float> p_arr){\
-                           auto p = p_arr.mutable_unchecked<1>(); \
-                           m.pressure(T, V, n, p.mutable_data(0)); \
-                           std::cout << "Before return, pressure is " << *p.data(0) << std::endl; \
-                           }, py::arg("T"), py::arg("V"), py::arg("n"), py::arg("p").noconvert()) \
-    .def("set_Tc", &Model::set_Tc) \
-    .def("Fres", &Model::Fres) 
-
-#define VariantEoS_bindings(Model) \
-    .def("variant_common_comp", &Model::variant_common_comp) \
-    .def("internal_comp", &Model::internal_comp) 
-
-// [](Model &m, float T, float V, const std::vector<float>* n, std::vector<float> p){m.pressure(T, V, n, &p[0]); }
-//
-void increment_value(float* val){
-    (*val)++;
-}
+// #include "Variant1.h"
 
 namespace py = pybind11;
+using array_i = pybind11::array_t<int, pybind11::array::c_style | pybind11::array::forcecast>*;
+using array_f = pybind11::array_t<float, pybind11::array::c_style | pybind11::array::forcecast>;
+using p_array_f = std::optional<pybind11::array_t<float, pybind11::array::c_style | pybind11::array::forcecast>>;
+using p_array_fp = pybind11::array_t<float, pybind11::array::c_style | pybind11::array::forcecast>*;
+
+#define BaseEos_bindings(Model) \
+    .def("pressure", [](Model& self, float T, float V, const std::vector<float>* n, array_f p){ \
+            auto p_bind = p.mutable_unchecked().mutable_data(0); \
+            self.pressure(T, V, n, p_bind); \
+            }, py::arg("T"), py::arg("V"), py::arg("n"), py::arg("p").noconvert() \
+        ) \
+    .def("set_Tc", &Model::set_Tc) \
+    .def("Fres", [](Model& self, float T, float V, const std::vector<float>* n, array_f Fres, p_array_f Ft, p_array_f Fv, p_array_f Fn){ \
+            auto Fres_bind = Fres.mutable_unchecked().mutable_data(0); \
+            auto Ft_bind = (Ft.has_value()) ? Ft.value().mutable_unchecked().mutable_data(0) : nullptr; \
+            auto Fv_bind = (Fv.has_value()) ? Fv.value().mutable_unchecked().mutable_data(0) : nullptr; \
+            auto Fn_bind = (Fn.has_value()) ? Fn.value().mutable_unchecked().mutable_data(0) : nullptr; \
+            self.Fres(T, V, n, Fres_bind, &Ft_bind, &Fv_bind, &Fn_bind); \
+            }, py::arg("T"), py::arg("V"), py::arg("n"), \
+                py::arg("Fres").noconvert(), \
+                py::arg("Ft").noconvert() = py::none(), \
+                py::arg("Fv").noconvert() = py::none(), \
+                py::arg("Fn").noconvert() = py::none() \
+        )
+
+
 PYBIND11_MODULE(libdemo, handle){
     handle.doc() = "Is this documentation? I have been told it is the best.";
 
-    // py::class_<Variant2>(handle, "Variant2")
-    //     .def(py::init<int, int, float, float, int, float>(), py::arg("ident"), py::arg("nc"), py::arg("Tc"), py::arg("Vc"), py::arg("var1"), py::arg("var2"))
-    //     VariantEoS_bindings(Variant2)
-    //     BaseEos_bindings(Variant2);
-
-    py::class_<NotIdGas>(handle, "NotIdGas")
+    py::class_<NotIdGas>(handle, "NotIdGas") 
         .def(py::init<int, int, float, float>(), py::arg("ident"), py::arg("nc"), py::arg("Tc"), py::arg("Vc")) 
-        BaseEos_bindings(NotIdGas); 
-
-    // py::class_<Variant1>(handle, "Variant1")
-    //     .def(py::init<int, int, float, float, int, float>(), py::arg("ident"), py::arg("nc"), py::arg("Tc"), py::arg("Vc"), py::arg("var1"), py::arg("var2"))
-    //     VariantEoS_bindings(Variant1)
-    //     BaseEos_bindings(Variant1);
+        BaseEos_bindings(NotIdGas);
 
 }

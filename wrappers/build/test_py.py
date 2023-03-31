@@ -7,3 +7,5 @@ V = 1
 n = [1, 2]
 
 print(nid.pressure(T, V, n))
+print(nid.Fres(T, V, n, True, None, True))
+

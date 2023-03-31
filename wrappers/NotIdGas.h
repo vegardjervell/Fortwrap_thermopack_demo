@@ -1,4 +1,4 @@
-/* This source file automatically generated on 2023-03-29 using 
+/* This source file automatically generated on 2023-03-31 using 
    FortWrap wrapper generator version 2.2.2 */
 
 #ifndef NOTIDGAS_H_
@@ -21,7 +21,7 @@ extern "C" {
   void allocate_notidgas_(ADDRESS *caddr);
   void deallocate_notidgas_(ADDRESS caddr);
   void directeos__notidgas_ctor_sub_wrap(ADDRESS instance, int* ident, int* nc, float* Tc, float* Vc);
-  void directeos__notidgas_fres_wrap(ADDRESS c_this, float* T, float* V, const float n[], float* Fres, float* Ft, float* Fv, float Fn[]);
+  void directeos__notidgas_fres_wrap(ADDRESS c_this, float* T, float* V, const float n[], float* Fres, float** Ft, float** Fv, float *(Fn[]));
 }
 #endif // SWIG
 
@@ -37,7 +37,7 @@ public:
   /**
    * \brief Compute residual and derivatives for ideal gas
    */
-  void Fres(float T, float V, const std::vector<float>* n, float* Fres, float* Ft=NULL, float* Fv=NULL, std::vector<float>* Fn=NULL);
+  void Fres(float T, float V, const std::vector<float>* n, float* Fres, float** Ft=nullptr, float** Fv=nullptr, float** Fn=nullptr);
 
 };
 

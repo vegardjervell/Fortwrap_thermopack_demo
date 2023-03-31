@@ -1,4 +1,4 @@
-/* This source file automatically generated on 2023-03-29 using 
+/* This source file automatically generated on 2023-03-31 using 
    FortWrap wrapper generator version 2.2.2 */
 
 #ifndef VARIANT1_H_
@@ -22,7 +22,7 @@ extern "C" {
   void deallocate_variant1_(ADDRESS caddr);
   void variants__variant1_ctor_sub_wrap(ADDRESS c_this, int* ident, int* nc, float* Tc, float* Vc, int* var1, float* var2);
   void variants__variant1_internal_comp_wrap(ADDRESS c_this, float* T, float* V, const float n[], float* computed);
-  void variants__variant1_fres_wrap(ADDRESS c_this, float* T, float* V, const float n[], float* Fres, float* Ft, float* Fv, float Fn[]);
+  void variants__variant1_fres_wrap(ADDRESS c_this, float* T, float* V, const float n[], float* Fres, float** Ft, float** Fv, float *(Fn[]));
 }
 #endif // SWIG
 
@@ -34,7 +34,7 @@ public:
 
   void internal_comp(float T, float V, const std::vector<float>* n, float* computed);
 
-  void Fres(float T, float V, const std::vector<float>* n, float* Fres, float* Ft=NULL, float* Fv=NULL, std::vector<float>* Fn=NULL);
+  void Fres(float T, float V, const std::vector<float>* n, float* Fres, float** Ft=nullptr, float** Fv=nullptr, float** Fn=nullptr);
 
 };
 

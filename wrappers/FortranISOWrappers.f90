@@ -63,9 +63,9 @@ END MODULE base_eos_wrap_
 MODULE directeos_wrap_
 
   USE ISO_C_BINDING
+  USE base_eos
   USE directeos
   USE base_eos_wrap_
-  USE base_eos
   IMPLICIT NONE
 
 CONTAINS
@@ -132,9 +132,9 @@ END MODULE directeos_wrap_
 MODULE variants_wrap_
 
   USE ISO_C_BINDING
+  USE base_eos
   USE variants
   USE base_eos_wrap_
-  USE base_eos
   IMPLICIT NONE
 
 CONTAINS
@@ -296,5 +296,17 @@ CONTAINS
   END SUBROUTINE variants__variant2_fres_wrap
 
 END MODULE variants_wrap_
+
+
+MODULE variants_internal_wrap_
+
+  USE ISO_C_BINDING
+  IMPLICIT NONE
+
+CONTAINS
+
+  ! C binding wrappers:
+
+END MODULE variants_internal_wrap_
 
 
